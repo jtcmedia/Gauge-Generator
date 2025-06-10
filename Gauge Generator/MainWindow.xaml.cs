@@ -1,18 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using MEDIA = System.Windows.Media;
 using Microsoft.Win32;
 
@@ -170,23 +158,51 @@ namespace Gauge_Generator
             }
         }
 
+        
+
+
         private void Button_Export(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog sve = new SaveFileDialog
+
+            foreach (Layer i in Global.project.layers)
             {
-                Filter = "PNG Image (*.png)|*.png"
-            };
-            if ((bool)sve.ShowDialog())
-            {
-                if (Global.Sidebar == Global.SidebarPages.Editor)
+                if(i is ClockHand_Item)
                 {
-                    foreach (Layer i in Global.project.layers)
-                    {
-                        if (i.RangeSource == Global.EditingLayer) i.ValidateWithSource();
-                    }
+
                 }
-                if (!Global.ExportToPNG(sve.FileName)) MessageBox.Show("File error. The image has not been generated", "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
+                if (Global.HandLayerExists())
+            {
+                switch (MessageBox.Show("You have a ClockHand Layer in your project. Do you wish to generate a series of images each with a different value?", "ClockHand layer", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation, MessageBoxResult.Yes))
+                {
+                    case MessageBoxResult.Yes:
+                        // save series of PNGs
+                        
+                        break;
+                    case MessageBoxResult.No:
+                        // save single PNG                        
+                        SaveFileDialog sve = new SaveFileDialog
+                        {
+                            Filter = "PNG Image (*.png)|*.png"
+                        };
+                        if ((bool)sve.ShowDialog())
+                        {
+                            if (Global.Sidebar == Global.SidebarPages.Editor)
+                            {
+                                foreach (Layer i in Global.project.layers)
+                                {
+                                    if (i.RangeSource == Global.EditingLayer) i.ValidateWithSource();
+                                }
+                            }
+                            if (!Global.ExportToPNG(sve.FileName)) MessageBox.Show("File error. The image has not been generated", "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                        }
+                        break;
+                    default:
+                        return;
+                }
+            }
+            
+            
         }
 
         private void Button_About(object sender, RoutedEventArgs e)
