@@ -472,6 +472,17 @@ namespace Gauge_Generator
             return true;
         }
 
+        public static bool HandLayerExists()
+        {
+            foreach (Layer i in project.layers)
+            {
+                //Console.WriteLine(i.GetType().Name);
+                if (i is ClockHand_Item) return true;
+            }
+
+            return false;
+        }
+
         public static Point GetPointOnCircle(Point center, double radius, double angle)
         {
             angle = Math.PI * angle / 180.0;
