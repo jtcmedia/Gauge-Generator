@@ -8,6 +8,8 @@ using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 using MEDIA = System.Windows.Media;
+using System.Security.Permissions;
+using System.Security.Policy;
 
 namespace Gauge_Generator
 {
@@ -26,6 +28,7 @@ namespace Gauge_Generator
         public int _value;
         public int _angle;
         public bool _manualangle;
+        public bool _generateseries;
 
         public enum ClockHandType
         {
@@ -100,6 +103,12 @@ namespace Gauge_Generator
                 _value = ValidateInt(value, Global.MIN_RANGE_VALUE, Global.MAX_RANGE_VALUE);
                 ValidateWithSource();
             }
+        }
+        [Description("Generate PNGs for each value in range source on export"), Category("Range")]
+        public bool GenerateSeries
+        {
+            get { return _generateseries; }
+            set { _generateseries = value; }
         }
         [Description("Selected angle in \"ManualAngle\" mode"), Category("Range")]
         public int Angle
